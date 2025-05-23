@@ -16,6 +16,18 @@ local RheonData = {
 		attack = 150,
 		defense = 150,
 		mana_points = 100,
+
+		elements = {
+			light = 1,
+			pyro = 0,
+			hydro = 0,
+			geo = 0,
+			wind = 0,
+			electro = 0,
+			cyro = 0,
+			darkness = 0,
+			chaos = 0,
+		},
 	},
 
 	-- Min Character's stats

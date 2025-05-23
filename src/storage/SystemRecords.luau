@@ -1,20 +1,41 @@
 local systemRecords = {}
 
 -- Define player stats, including vitality
-systemRecords.systemGeneralInfo = {
+systemRecords.characters = {
 	{
+		name = "Rheon",
 		level = 1,
-		title = "None",
+		infusion = 0,
+
+		unlocked = true,
 	},
 	{
-		name = "Health",
-		max = 100, -- Dummy value
-		current = 100, -- Dummy value
+		name = "Stristya",
+		level = 1,
+		infusion = 0,
+
+		unlocked = false,
 	},
 	{
-		name = "Mana",
-		max = 100, -- Dummy value
-		current = 100, -- Dummy value
+		name = "Durnan",
+		level = 1,
+		infusion = 0,
+
+		unlocked = false,
+	},
+	{
+		name = "Warsevally",
+		level = 1,
+		infusion = 0,
+
+		unlocked = false,
+	},
+	{
+		name = "Gaianox",
+		level = 1,
+		infusion = 0,
+
+		unlocked = false,
 	},
 }
 
