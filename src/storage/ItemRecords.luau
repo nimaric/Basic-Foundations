@@ -1,6 +1,6 @@
 local itemRecords = {}
 
--- Table of all weapons
+-- Table of all items
 itemRecords.itemInfoList = {
 	{
 		name = "Robidium",
