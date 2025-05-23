@@ -3,14 +3,14 @@ local systemRecords = {}
 systemRecords.playerData = {
 	flight_speed = 5,
 }
-
+-- Define player stats, including vitality
 systemRecords.characters = {
 	{
 		name = "Rheon",
 		level = 1,
 		infusion = 0,
 
-		unlocked = false,
+    unlock = true
 	},
 	{
 		name = "Stristya",
@@ -18,6 +18,17 @@ systemRecords.characters = {
 		infusion = 0,
 
 		unlocked = true,
+	},
+	{
+		name = "Durnan",
+		level = 1,
+		infusion = 0,
+
+		unlocked = false,
+	},
+	{
+    
+		unlocked = false,
 	},
 	{
 		name = "Durnan",

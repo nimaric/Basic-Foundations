@@ -61,13 +61,13 @@ local StristyaData = {
 		lightning_pillar = { -- E, Main ability
 			damage = 50,
 			active_time = 5,
-			constant_damage = 0,
+      constant_damage = 0,
 			cooldown = 10,
 		},
 		down_with_the_prince = { -- Q, Ultimate ability
 			damage = 50,
 			active_time = 5,
-			constant_damage = 0,
+      constant_damage = 0,
 			cooldown = 10,
 		},
 	},
@@ -172,6 +172,9 @@ function StristyaData:Infusion()
 		print("StristyaData: Infusion 6")
 		-- Update Skill (Q) Down with the Prince
 		-- Ultimate lasts for +2 seconds, Pillars become semi homing to help with accuracy, and replaces all arrows with lightning bolts (enhances pillars). (Homing only works if aim is 1m away, anything further will only increase damage slightly)
+		down_with_the_prince = {
+			constant_damage = base_attack * 1.5, -- 150% of base attack
+		}
 	end
 end
 
