@@ -8,10 +8,15 @@ local StristyaData = {
 
 	-- Character's stats
 	stats = {
-		level = -1,
-		title = "Disiple of the Prince of Darkness",
+		level = 185,
+		infusion = 0, -- 0 = no infusion
+		title = "Disciple of the Prince of Darkness",
+		rating = 5, -- 5 Star Character
+
 		health = 150000000,
+		attack = 800,
 		defense = 500,
+		mana_points = 9999999,
 	},
 
 	-- Character's equipment

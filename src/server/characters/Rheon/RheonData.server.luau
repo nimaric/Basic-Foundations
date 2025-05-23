@@ -10,12 +10,32 @@ local RheonData = {
 		level = 1,
 		infusion = 0,
 		title = "Savior",
-		rating = 6, -- Unique Character
+		rating = 4,
 
 		health = 1000,
 		attack = 150,
 		defense = 150,
 		mana_points = 100,
+	},
+
+	-- Min Character's stats
+	min_stats = {
+		minlevel = 1,
+		mininfusion = 0,
+		health = 1000,
+		attack = 150,
+		defense = 150,
+		mana_points = 100,
+	},
+
+	-- Max Character's stats
+	max_stats = {
+		maxlevel = 100,
+		maxinfusion = 6,
+		health = 32000,
+		attack = 3000,
+		defense = 1800,
+		mana_points = 900,
 	},
 
 	-- Character's abilities
@@ -33,13 +53,13 @@ local RheonData = {
 
 function RheonData:levelup()
 	local level = self.stats.level
-	local max_level = 100
+	local max_level = self.max_stats.maxlevel
 
 	-- Base and max values
-	local base_health, max_health = 1000, 32000
-	local base_attack, max_attack = 150, 3000
-	local base_defense, max_defense = 150, 1800
-	local base_mp, max_mp = 100, 900
+	local base_health, max_health = self.min_stats.health, self.max_stats.health
+	local base_attack, max_attack = self.min_stats.attack, self.max_stats.attack
+	local base_defense, max_defense = self.min_stats.defense, self.min_stats.attack
+	local base_mp, max_mp = self.min_stats.mana_points, self.max_stats.mana_points
 
 	-- Linear interpolation formula
 	local function lerp(base, max)
