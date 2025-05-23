@@ -61,11 +61,13 @@ local StristyaData = {
 		lightning_pillar = { -- E, Main ability
 			damage = 50,
 			active_time = 5,
+			constant_damage = 0,
 			cooldown = 10,
 		},
 		down_with_the_prince = { -- Q, Ultimate ability
 			damage = 50,
 			active_time = 5,
+			constant_damage = 0,
 			cooldown = 10,
 		},
 	},
@@ -94,6 +96,12 @@ local StristyaData = {
 			description = "Gain 20% when flying if there is another electro user in the team.",
 		},
 	},
+
+	-- Special Stats
+	special_stats = {
+		abyss_soul_gain = 0,
+		max_abyss_soul = 10,
+	},
 }
 
 function StristyaData:levelup()
@@ -117,28 +125,41 @@ function StristyaData:levelup()
 	self.stats.mana_points = lerp(base_mp, max_mp)
 end
 
+function StristyaData:InfusionLevel()
+	local infusion = self.stats.infusion
+	local max_inf = self.max_stats.maxinfusion
+
+	if infusion < 0 then
+		infusion = 0
+	elseif infusion > max_inf then
+		infusion = max_inf
+	end
+
+	self.stats.infusion = infusion
+
+	return infusion
+end
+
 function StristyaData:Infusion()
 	local base_attack = self.min_stats.attack
-	local down_with_the_prince = self.normal_abilities.down_with_the_prince -- Ultimate ability
-	local abyss_soul_gain = 0
-	local max_abyss_soul = 10
+	local max_abyss_soul = self.special_stats.max_abyss_soul
 
 	local infusion = self.stats.infusion
 
 	if infusion == 0 then
 		-- No infusion, no special effects
-		abyss_soul_gain = 0
+		self.special_stats.abyss_soul_gain = 0
 	elseif infusion == 1 then
-		abyss_soul_gain = 1
+		self.special_stats.abyss_soul_gain = 1
 	elseif infusion == 2 then
-		down_with_the_prince = {
+		self.normal_abilities.lightning_pillar = {
 			constant_damage = base_attack * 1.5, -- 150% of base attack
 		}
-		down_with_the_prince = {
+		self.normal_abilities.down_with_the_prince = {
 			constant_damage = base_attack * 1.5, -- 150% of base attack
 		}
 	elseif infusion == 3 then
-		max_abyss_soul = max_abyss_soul + 5
+		self.special_stats.max_abyss_soul = max_abyss_soul + 5
 	elseif infusion == 4 then
 		print("StristyaData: Infusion 4")
 		-- Update SystemRecords flight speed
@@ -151,9 +172,6 @@ function StristyaData:Infusion()
 		print("StristyaData: Infusion 6")
 		-- Update Skill (Q) Down with the Prince
 		-- Ultimate lasts for +2 seconds, Pillars become semi homing to help with accuracy, and replaces all arrows with lightning bolts (enhances pillars). (Homing only works if aim is 1m away, anything further will only increase damage slightly)
-		down_with_the_prince = {
-			constant_damage = base_attack * 1.5, -- 150% of base attack
-		}
 	end
 end
 
