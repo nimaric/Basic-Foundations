@@ -1,20 +1,23 @@
 local systemRecords = {}
 
--- Define player stats, including vitality
+systemRecords.playerData = {
+	flight_speed = 5,
+}
+
 systemRecords.characters = {
 	{
 		name = "Rheon",
 		level = 1,
 		infusion = 0,
 
-		unlocked = true,
+		unlocked = false,
 	},
 	{
 		name = "Stristya",
 		level = 1,
 		infusion = 0,
 
-		unlocked = false,
+		unlocked = true,
 	},
 	{
 		name = "Durnan",
@@ -38,5 +41,21 @@ systemRecords.characters = {
 		unlocked = false,
 	},
 }
+
+function systemRecords.switchCharacter(playerData, characterName)
+	if playerData.characters[characterName] then
+		playerData.currentCharacter = characterName
+		return true
+	end
+	return false
+end
+
+function systemRecords.unlockCharacter(playerData, characterName)
+	if playerData.characters[characterName] then
+		playerData.characters[characterName].unlocked = true
+		return true
+	end
+	return false
+end
 
 return systemRecords
