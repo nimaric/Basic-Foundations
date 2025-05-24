@@ -3,13 +3,10 @@ local StristyaData = {
 	-- Name of the character
 	name = "Stristya",
 
-	-- Description of the character
-	desc = "",
-
 	-- Character's stats
 	stats = {
 		level = 1,
-		infusion = 0, -- 0 = no infusion
+		infusion_count = 0, -- 0 = no infusion
 		title = "Disciple of the Prince of Darkness",
 		rating = 5, -- 5 Star Character
 
@@ -33,8 +30,8 @@ local StristyaData = {
 
 	-- Min Character's stats
 	min_stats = {
-		minlevel = 1,
-		mininfusion = 0,
+		level = 1,
+		infusion = 0,
 		health = 950,
 		attack = 200,
 		defense = 120,
@@ -43,8 +40,8 @@ local StristyaData = {
 
 	-- Max Character's stats
 	max_stats = {
-		maxlevel = 100,
-		maxinfusion = 6,
+		level = 100,
+		infusion = 6,
 		health = 30000,
 		attack = 4000,
 		defense = 1300,
@@ -62,13 +59,13 @@ local StristyaData = {
 			damage = 50,
 			active_time = 5,
 			constant_damage = 0,
-			cooldown = 10,
+			cooldown_seconds = 10,
 		},
 		down_with_the_prince = { -- Q, Ultimate ability
 			damage = 50,
 			active_time = 5,
 			constant_damage = 0,
-			cooldown = 10,
+			cooldown_seconds = 10,
 		},
 	},
 
@@ -97,14 +94,14 @@ local StristyaData = {
 		},
 	},
 
-	-- Special Stats
-	special_stats = {
+	-- Soul Counter Stats
+	soul_counter_stats = {
 		abyss_soul_gain = 0,
 		max_abyss_soul = 10,
 	},
 }
 
-function StristyaData:levelup()
+function StristyaData:levelUp()
 	local level = self.stats.level
 	local max_level = self.max_stats.maxlevel
 
@@ -125,19 +122,24 @@ function StristyaData:levelup()
 	self.stats.mana_points = lerp(base_mp, max_mp)
 end
 
-function StristyaData:InfusionLevel()
-	local infusion = self.stats.infusion
-	local max_inf = self.max_stats.maxinfusion
+function StristyaData:InfusionLevelUp()
+	local infusion_count = self.stats.infusion_count
+	local max_inf = self.max_stats.infusion
 
-	if infusion < 0 then
-		infusion = 0
-	elseif infusion > max_inf then
-		infusion = max_inf
+	if infusion_count < 0 then
+		infusion_count = 0
 	end
 
-	self.stats.infusion = infusion
+	infusion_count = infusion_count + 1
 
-	return infusion
+	if infusion_count > max_inf then
+		infusion_count = max_inf
+	end
+
+	self.stats.infusion_count = infusion_count
+	StristyaData:Infusion()
+
+	return infusion_count
 end
 
 function StristyaData:Infusion()
@@ -176,7 +178,9 @@ function StristyaData:Infusion()
 end
 
 --StristyaData.stats.level = StristyaData.stats.level + 10
---StristyaData:levelup()
+--StristyaData:levelUp()
 
 --print("StristyaData loaded successfully.")
---print(StristyaData)
+--print(StristyaData.stats)
+
+return StristyaData

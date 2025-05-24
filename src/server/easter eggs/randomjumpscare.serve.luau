@@ -1,0 +1,1 @@
+-- Jumpscare during wishing animation in halloween event
