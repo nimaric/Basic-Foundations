@@ -91,3 +91,5 @@ end
 
 --print("RheonData loaded successfully.")
 --print("RheonData: ", RheonData)
+
+return RheonData

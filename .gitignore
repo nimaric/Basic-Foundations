@@ -7,3 +7,6 @@
 Packages/
 ServerPackages/
 sourcemap.json
+
+# Personal settings
+/.vscode/
