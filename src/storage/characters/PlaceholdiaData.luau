@@ -8,7 +8,6 @@ local PlaceholdiaData = {
 		level = 1,
 		infusion_count = 0, -- 0 = no infusion
 		title = "Disciple of the Prince of Darkness",
-		rating = 5, -- 5 Star Character
 
 		health = 950,
 		attack = 200,

@@ -10,7 +10,6 @@ local RheonData = {
 		level = 1,
 		infusion = 0,
 		title = "Savior",
-		rating = 4,
 
 		health = 1000,
 		attack = 150,
