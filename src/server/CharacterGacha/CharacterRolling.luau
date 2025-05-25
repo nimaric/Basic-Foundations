@@ -9,8 +9,11 @@ local FEATURED_FIVE_STAR_CHARACTER_CHANCE = 25
 local RANDOM_FIVE_STAR_CHARACTER_CHANCE = 75
 
 local FOUR_STAR_PITY_NEEDED_FOR_GAURANTEE = 20 -- This is the amount of pity needed for a GAURANTEED SUPPLEMENTARY four star
-local GAURANTEED_FOUR_STAR = false -- This is set to true when the 4-star pity counter reaches 20
 local FEATURED_FOUR_STAR_CHARACTER_CHANCE = 25 -- This is the chance to get a featured 4-star character
+
+local GuaranteedFourStar = false -- This is set to true when the 4-star pity counter reaches 20
+local FeaturedFiveStarCharacterChance = 25
+local RandomFiveStarCharacterChance = 75
 
 -- This module is responsible for managing character rolling in the gacha system.
 local characterRolling = {}
@@ -62,37 +65,38 @@ function characterRolling.pityCounter(pity)
 	if pity >= 100 then
 		print("Pity count reached 90, Gauranteee Featured Character.")
 		pity = 0 -- Reset pity counter if it reaches 90
-		FEATURED_FIVE_STAR_CHARACTER_CHANCE = 100 -- Set featured character chance to 100%
-		RANDOM_FIVE_STAR_CHARACTER_CHANCE = 0
+		FeaturedFiveStarCharacterChance = 100 -- Set featured character chance to 100%
+		RandomFiveStarCharacterChance = 0
 	elseif pity >= 80 then
 		print("Pity count reached 80, setting 50/50.")
-		FEATURED_FIVE_STAR_CHARACTER_CHANCE = 50
-		RANDOM_FIVE_STAR_CHARACTER_CHANCE = 50
+		FeaturedFiveStarCharacterChance = 50
+		RandomFiveStarCharacterChance = 50
 	elseif pity >= 50 then
 		print("Pity count reached 50, setting 25/75.")
-		FEATURED_FIVE_STAR_CHARACTER_CHANCE = 25
-		RANDOM_FIVE_STAR_CHARACTER_CHANCE = 75
+		FeaturedFiveStarCharacterChance = 25
+		RandomFiveStarCharacterChance = 75
 	end
-	return pity, FEATURED_FIVE_STAR_CHARACTER_CHANCE, RANDOM_FIVE_STAR_CHARACTER_CHANCE
+	return pity
 end
 
 function characterRolling.fourStarFeaturedPityCounter(fourStarFeaturedPity)
 	fourStarFeaturedPity = fourStarFeaturedPity + 1
 	if fourStarFeaturedPity == FOUR_STAR_PITY_NEEDED_FOR_GAURANTEE then
-		print("4-Star Pity count reached 20, resetting to 0.")
-		GAURANTEED_FOUR_STAR = true -- Set guaranteed SUPPLEMENTARY 4-star character
-		fourStarFeaturedPity = 0 -- Reset 4-star pity counter if it reaches 9
+		print("4-Star Pity count reached 20")
+		GuaranteedFourStar = true -- Set guaranteed SUPPLEMENTARY 4-star character
 	end
 	return fourStarFeaturedPity
 end
 
 -- How many roll are used, the current pity count
 function characterRolling.rollCharacter(rollcount, pity, fourStarFeaturedPity)
+	pity = tonumber(pity) or 0
+	fourStarFeaturedPity = tonumber(fourStarFeaturedPity) or 0
 	local pulledBatch = {}
 	local AMOUNT_OF_FIVE_STARS = characterRolling.checkCountCharacterFiveRating()
 	local AMOUNT_OF_FOUR_STARS = characterRolling.checkCountFourRating()
 
-	print(rollcount .. " Rolls requested.")
+	print(rollcount .. " Rolls requested.", "PT Counter:", pity, "4PT Counter:", fourStarFeaturedPity)
 	if rollcount > 10 then
 		print("Invalid roll count: " .. rollcount .. ". Maximum allowed is 10.")
 		return pulledBatch, pity, fourStarFeaturedPity
@@ -107,35 +111,26 @@ function characterRolling.rollCharacter(rollcount, pity, fourStarFeaturedPity)
 		-- Increase 4-Star Pity Counter
 		fourStarFeaturedPity = characterRolling.fourStarFeaturedPityCounter(fourStarFeaturedPity)
 
-		if GAURANTEED_FOUR_STAR == true then
+		if GuaranteedFourStar == true then
 			-- Featured 4-Star Character
 			local featuredFourStar = math.random(1, #supplementarycharacters) -- Randomly select a supplementary character
 			table.insert(pulledBatch, supplementarycharacters[featuredFourStar])
-			fourStarFeaturedPity = 0 -- Reset 4-star pity counter after pulling featured character
-			GAURANTEED_FOUR_STAR = false -- Reset guaranteed 4-star character
+			fourStarFeaturedPity = fourStarFeaturedPity - FOUR_STAR_PITY_NEEDED_FOR_GAURANTEE -- Remove Pity needed for gaurantee, possible to have more than 20 pity when this is triggered, ensure fairness in pity.
+			GuaranteedFourStar = false -- Reset guaranteed 4-star character variable
 			print("Pulled FEATURED 4-Star Character: " .. supplementarycharacters[featuredFourStar])
 		end
 
-		local roll = math.random(1, HIGHEST_ROLL)
-		print(
-			"Roll: "
-				.. i
-				.. ", Roll Value: "
-				.. roll
-				.. ", Pity: "
-				.. pity
-				.. ", Four Star Pity: "
-				.. fourStarFeaturedPity
-		)
+		local rollvalue = math.random(1, HIGHEST_ROLL)
+		print("Roll:", i, ", RV: " .. rollvalue .. ", PT: " .. pity .. ", FSP: " .. fourStarFeaturedPity .. ", ")
 
-		if roll == FIVE_STAR_ROLL then
+		if rollvalue == FIVE_STAR_ROLL then
 			-- 5-Star Character Pull
 			local fiveStarRoll = math.random(1, 100)
-			if fiveStarRoll <= FEATURED_FIVE_STAR_CHARACTER_CHANCE then
+			if fiveStarRoll <= FeaturedFiveStarCharacterChance then
 				-- Featured Character
 				table.insert(pulledBatch, featuredCharacter)
 				print("Pity Count: " .. pity)
-				pity = 0 -- Reset pity counter after pulling featured character
+				pity = 0 -- Reset pity counter after pulling five star character
 				print("Pulled FEATURED 5-Star Character: " .. featuredCharacter)
 			else
 				-- Random 5-Star Character
@@ -144,15 +139,15 @@ function characterRolling.rollCharacter(rollcount, pity, fourStarFeaturedPity)
 				print("Pulled RANDOM 5-Star Character: " .. randomFiveStar.name)
 			end
 		end
-		if roll >= FOUR_STAR_ROLL and roll < FIVE_STAR_ROLL then
+		if rollvalue >= FOUR_STAR_ROLL and rollvalue < FIVE_STAR_ROLL then
 			-- 4-Star Character Pull
 			local fourStarRoll = math.random(1, 100)
 			if fourStarRoll <= FEATURED_FOUR_STAR_CHARACTER_CHANCE then
 				-- Featured 4-Star Character
 				local featuredFourStar = math.random(1, #supplementarycharacters) -- Randomly select a supplementary character
 				table.insert(pulledBatch, supplementarycharacters[featuredFourStar])
-				fourStarFeaturedPity = 0 -- Reset 4-star pity counter after pulling featured character
-				GAURANTEED_FOUR_STAR = false -- Reset guaranteed 4-star character
+				fourStarFeaturedPity = fourStarFeaturedPity - FOUR_STAR_PITY_NEEDED_FOR_GAURANTEE
+				GuaranteedFourStar = false -- Reset guaranteed 4-star character
 				print("Pulled FEATURED 4-Star Character: " .. supplementarycharacters[featuredFourStar])
 			else
 				-- Random 4-Star Character

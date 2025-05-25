@@ -40,9 +40,23 @@ Players.PlayerAdded:Connect(function(player)
 				print("Added new character to player data:", name)
 			end
 		end
+		local BASE_GENERAL_DATA = require(game.ServerStorage.Storage.BaseGeneralData)
+		data.generalData = data.generalData or {}
+
+		for key, value in pairs(BASE_GENERAL_DATA) do
+			if data.generalData[key] == nil then
+				data.generalData[key] = value
+				print("Added new field to generalData:", key, value)
+			end
+		end
+		if data.version ~= playerDataStore.version then
+			print("Previous Version:", playerDataStore.version("New Verion: "), data.version)
+		else
+			print("Current Verion: ", data.version)
+		end
+
 		data.version = playerDataStore.version or nil
 		playerDataStore[player.UserId] = data
-		print("New Version: ", data.version)
 	else
 		playerDataStore[player.UserId] = createPlayerData()
 		print("Created new data for", player.Name, "Player Data: ", data)

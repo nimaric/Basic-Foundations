@@ -1,15 +1,12 @@
 -- This module created new playerData for new players.
 
 local BASE_CHARACTER_DATA = require(game.ServerStorage.Storage.characters.BaseCharacterData) -- Condensed character data module
+local BASE_GENERAL_DATA = require(game.ServerStorage.Storage.BaseGeneralData)
 
 -- Define the character data for Rheon and Stristya
 local function createPlayerData()
 	local createdCharacterNames = {} -- Debugging Purposes, condense new characters in one list
-	local playerData = {}
-
-	playerData.generalData = {
-		flight_speed = 5,
-	}
+	local playerData = BASE_GENERAL_DATA
 
 	playerData.currentCharacter = "Rheon" -- Default character
 
