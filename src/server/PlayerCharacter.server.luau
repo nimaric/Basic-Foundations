@@ -1,5 +1,6 @@
 local SessionData = require(game.ServerScriptService.Server.SessionData) -- Adjust path if needed
 local Players = game:GetService("Players")
+local systemFunction = game.ReplicatedStorage.SystemFunction
 
 Players.PlayerAdded:Connect(function(player)
 	local userId = player.UserId
@@ -22,3 +23,9 @@ Players.PlayerAdded:Connect(function(player)
 		print("Player data loaded for", player.Name)
 	end
 end)
+
+systemFunction.OnServerInvoke = function(player)
+	local userId = player.UserId
+	local playerData = SessionData:GetPlayerData(userId)
+	return playerData
+end

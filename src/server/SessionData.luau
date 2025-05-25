@@ -9,6 +9,26 @@ local playerDataStoreDS = DataStoreService:GetDataStore("PlayerDataStore") -- Na
 
 playerDataStore.version = "1.0.0" -- Game Version
 
+local function generateUniqueIdAlphabet(length)
+	local chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+	local id = ""
+	for i = 1, length do
+		local rand = math.random(1, #chars)
+		id = id .. chars:sub(rand, rand)
+	end
+	return id
+end
+
+local function generateUniqueIdNumber(length)
+	local chars = "0123456789"
+	local id = ""
+	for i = 1, length do
+		local rand = math.random(1, #chars)
+		id = id .. chars:sub(rand, rand)
+	end
+	return id
+end
+
 Players.PlayerAdded:Connect(function(player)
 	-- Try to load data from DataStore
 	local data
@@ -17,7 +37,7 @@ Players.PlayerAdded:Connect(function(player)
 	end)
 	if success and data then
 		data.version = tostring(data.version) -- If Version is nil
-		print("Loaded data for", player.Name, "Player Data: ", data)
+		print("VERIFYING ", data.uniqueId or nil)
 		print("File Version: " .. data.version)
 		-- MIGRATION: Add new characters when loading old version
 		local BASE_CHARACTER_DATA = require(game.ServerStorage.Storage.characters.BaseCharacterData)
@@ -40,15 +60,25 @@ Players.PlayerAdded:Connect(function(player)
 				print("Added new character to player data:", name)
 			end
 		end
+
 		local BASE_GENERAL_DATA = require(game.ServerStorage.Storage.BaseGeneralData)
 		data.generalData = data.generalData or {}
-
 		for key, value in pairs(BASE_GENERAL_DATA) do
 			if data.generalData[key] == nil then
 				data.generalData[key] = value
 				print("Added new field to generalData:", key, value)
 			end
 		end
+
+		if not data.uniqueId then
+			data.uniqueId = generateUniqueIdAlphabet(4)
+			data.uniqueId = data.uniqueId .. "-" .. generateUniqueIdNumber(4)
+		elseif #data.uniqueId ~= 9 then
+			print("Updating uniqueId for", player.Name, "Old value:", data.uniqueId)
+			data.uniqueId = generateUniqueIdAlphabet(4)
+			data.uniqueId = data.uniqueId .. "-" .. generateUniqueIdNumber(4)
+		end
+
 		if data.version ~= playerDataStore.version then
 			print("Previous Version:", playerDataStore.version("New Verion: "), data.version)
 		else
